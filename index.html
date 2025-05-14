@@ -1,17 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Michelin Star Tracker</title>
+  <meta charset="UTF-8">
+  <title>Michelin Star Blog – Jeremy Song</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Jeremy’s Michelin Star Blog</h1>
-  <p>Tracking and rating every Michelin-starred restaurant I've eaten at.</p>
+  <div class="container">
+    <h1>Three Michelin Stars, Current</h1>
+    <p>
+      This is the list of all <em>current</em> Michelin three-star restaurants I’ve visited. 
+      Highlighted rows link to my reviews. Based on 
+      <a href="https://guide.michelin.com/en/restaurants" target="_blank">Michelin’s official site</a>.
+    </p>
+    <p><strong>Total:</strong> <span class="count">151/151</span> visited, updated May 2025</p>
 
-  <ul>
-    <li><a href="reviews/noma.html">Noma – 10/10</a></li>
-    <li><a href="reviews/eleven-madison.html">Eleven Madison Park – 9/10</a></li>
-    <li><a href="reviews/blue-hill.html">Blue Hill at Stone Barns – 8.5/10</a></li>
-  </ul>
+    <div class="country">
+      <h2>Denmark (3 / 3)</h2>
+      <table>
+        <tr class="visited">
+          <td>Copenhagen</td>
+          <td>Geranium</td>
+          <td><a href="reviews/geranium.html">17 Review</a></td>
+        </tr>
+        <tr class="visited">
+          <td>Copenhagen</td>
+          <td>Noma</td>
+          <td><a href="reviews/noma.html">17 Review</a></td>
+        </tr>
+        <tr class="visited">
+          <td>Gentofte</td>
+          <td>Jordnær</td>
+          <td><a href="reviews/jordnaer.html">18 Review</a></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="country">
+      <h2>Austria (2 / 2)</h2>
+      <table>
+        <tr class="visited">
+          <td>Vienna</td>
+          <td>Amador</td>
+          <td><a href="reviews/amador.html">17 Review</a></td>
+        </tr>
+        <tr class="visited">
+          <td>Vienna</td>
+          <td>Steirereck</td>
+          <td><a href="reviews/steirereck.html">16 Review</a></td>
+        </tr>
+      </table>
+    </div>
+    <!-- Add more countries as needed -->
+  </div>
 </body>
 </html>
