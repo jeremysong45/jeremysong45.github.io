@@ -30,8 +30,7 @@ a:hover {
 
 table {
   width: 100%;
-  border-collapse: collapse;   
-  border-spacing: 0 12px;       
+  border-collapse: collapse;    
   margin-top: 0.5rem;
   margin-bottom: 2rem;
   table-layout: fixed;
