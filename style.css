@@ -36,6 +36,11 @@ table {
   table-layout: fixed;
 }
 
+td {
+  padding: 1.25rem 0.75rem;  
+  border-bottom: 1px solid #ddd;
+}
+
 td:nth-child(1) {
   width: 30%;
   text-align: left;
