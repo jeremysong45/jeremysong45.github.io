@@ -30,26 +30,24 @@ a:hover {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;   
+  border-spacing: 0 12px;       
   margin-top: 0.5rem;
   margin-bottom: 2rem;
-  table-layout: fixed; 
+  table-layout: fixed;
 }
 
 td:nth-child(1) {
-  padding: 1rem 0.5rem;
   width: 30%;
   text-align: left;
 }
 
 td:nth-child(2) {
-  padding: 1rem 0.5rem;
   width: 40%;
   text-align: left;
 }
 
 td:nth-child(3) {
-  padding: 1rem 0.5rem;
   width: 30%;
   text-align: right;
 }
