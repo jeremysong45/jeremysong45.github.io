@@ -71,3 +71,8 @@ tr.visited {
   font-weight: bold;
   color: #2a9d8f;
 }
+
+.star-img {
+  width: 80px;     
+  height: auto;
+}
