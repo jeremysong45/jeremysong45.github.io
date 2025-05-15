@@ -94,8 +94,9 @@ tr.visited {
 
 .navbar {
   display: flex;
-  justify-content: center;  /* ⬅️ centers content */
-  margin-top: 1rem;
+  justify-content: center;
+  margin-top: 2rem;      
+  margin-bottom: 1rem;   
   font-family: sans-serif;
 }
 
@@ -120,6 +121,7 @@ tr.visited {
 
 .dropdown {
   position: relative;
+  padding-bottom: 1rem;
 }
 
 .dropdown-content {
