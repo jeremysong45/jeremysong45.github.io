@@ -85,5 +85,18 @@
     </div>
     <!-- Add more countries as needed -->
   </div>
+  <script>
+    const path = window.location.pathname;
+
+    if (path.endsWith('index.html') || path === '/') {
+      document.getElementById('nav-home')?.classList.add('active');
+    } else if (path.includes('about.html')) {
+      document.getElementById('nav-about-me')?.classList.add('active');
+      document.getElementById('nav-about')?.classList.add('active');
+    } else if (path.includes('rating.html')) {
+      document.getElementById('nav-rating')?.classList.add('active');
+      document.getElementById('nav-about')?.classList.add('active');
+    }
+  </script>
 </body>
 </html>
