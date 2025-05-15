@@ -1,40 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>About Me</title>
+  <meta charset="UTF-8">
+  <title>Jeremy Song – Michelin Star Blog</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="navbar">
-  <div class="nav-center">
-    <a href="restaurants.html" class="nav-link" id="nav-home">Restaurant List</a>
-    <div class="dropdown">
-      <a href="index.html" class="nav-link" id="nav-about">About</a>
-      <div class="dropdown-content">
-        <a href="index.html" class="nav-link" id="nav-about-me">About Me</a>
-        <a href="rating.html" class="nav-link" id="nav-rating">Rating System</a>
+  <nav class="navbar">
+    <div class="nav-center">
+      <a href="restaurants.html" class="nav-link" id="nav-home">Restaurant List</a>
+      <div class="dropdown">
+        <a href="index.html" class="nav-link" id="nav-about">About</a>
+        <div class="dropdown-content">
+          <a href="index.html" class="nav-link" id="nav-about-me">About Me</a>
+          <a href="rating.html" class="nav-link" id="nav-rating">Rating System</a>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+
   <div class="container">
     <h1>About Me</h1>
     <p>I’m Jeremy, and I travel to eat. This blog is my record of Michelin-starred restaurants I’ve visited and rated.</p>
   </div>
-  
+
   <script>
     const path = window.location.pathname;
 
     if (
-  path.endsWith('index.html') ||
-  path === '/' ||
-  path === '/index.html'
-) {
-  document.getElementById('nav-about')?.classList.add('active');
-  document.getElementById('nav-about-me')?.classList.add('active');
-}
-
-    if (path.includes('index.html')) {
+      path.endsWith('index.html') ||
+      path === '/' ||
+      path === '/index.html'
+    ) {
       document.getElementById('nav-about')?.classList.add('active');
       document.getElementById('nav-about-me')?.classList.add('active');
     }
@@ -43,7 +40,10 @@
       document.getElementById('nav-about')?.classList.add('active');
       document.getElementById('nav-rating')?.classList.add('active');
     }
+
+    if (path.includes('restaurants.html')) {
+      document.getElementById('nav-home')?.classList.add('active');
+    }
   </script>
-  
 </body>
 </html>
