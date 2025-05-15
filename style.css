@@ -118,11 +118,6 @@ tr.visited {
   text-decoration: underline;
 }
 
-.nav-link.active {
-  text-decoration: underline;
-  font-weight: bold; /* optional */
-}
-
 /* DROPDOWN */
 
 .dropdown {
