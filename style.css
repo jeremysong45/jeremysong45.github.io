@@ -14,8 +14,8 @@ body {
   border-radius: 8px;
 }
 
-.no-background {
-  background: none;
+.no-background p {
+  line-height: 1.8;
 }
 
 h1 {
