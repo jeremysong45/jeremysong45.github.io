@@ -204,28 +204,26 @@ tr.visited {
 
 .image-hover-box .caption {
   position: absolute;
-  bottom: -100%; /* start hidden below */
   left: 0;
+  bottom: 0;
   width: 100%;
   background: rgba(0, 0, 0, 0.6);
   color: white;
   font-size: 0.85rem;
   text-align: center;
   padding: 0.5rem;
-  transition: bottom 0.3s ease-in-out;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 
-    /* Start hidden */
+  /* Hidden by default */
   transform: translateY(100%);
   opacity: 0;
-
-  /* Smooth animation */
   transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .image-hover-box:hover .caption {
-  bottom: 0;
+  transform: translateY(0%);
+  opacity: 1;
 }
 
 
