@@ -184,12 +184,13 @@ tr.visited {
   margin: 1rem 0;       
 }
 
-.crop-img {
-  width: 300px;         /* or any fixed size */
-  height: 200px;
-  object-fit: cover;    /* this CROPS it */
-  object-position: center;  /* optional: change crop area (e.g. 'top', 'bottom') */
-  border-radius: 8px;   /* optional */
+.crop-square {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+  margin: 1rem auto;     
+  display: block;
 }
 
 
