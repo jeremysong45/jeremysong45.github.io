@@ -199,7 +199,6 @@ tr.visited {
   height: 300px;
   display: inline-block;
   overflow: hidden;
-  border-radius: 10px;
 }
 
 .image-hover-box .caption {
