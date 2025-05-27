@@ -194,10 +194,11 @@ tr.visited {
 }
 
 .image-hover-box {
-  position: relative;
+  margin: 1rem auto;
+  display: block;
   width: 300px;
   height: 300px;
-  display: inline-block;
+  position: relative;
   overflow: hidden;
 }
 
