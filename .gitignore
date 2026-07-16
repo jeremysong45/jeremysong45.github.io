@@ -12,3 +12,10 @@ $RECYCLE.BIN/
 # Local scratch / originals (optional)
 # Keep full-size originals out of the repo; commit only resized web copies.
 _originals/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
