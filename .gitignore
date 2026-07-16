@@ -1,3 +1,6 @@
+# Editor / tooling
+.claude/
+
 # OS / editor junk — never commit these
 Thumbs.db
 ehthumbs.db
