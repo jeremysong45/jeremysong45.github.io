@@ -35,7 +35,7 @@ const RESTAURANTS = [
     country: "China",
     stars: 1,
     score: 17,
-    review: false,
+    review: true,
   },
   {
     name: "Carino",
@@ -44,7 +44,7 @@ const RESTAURANTS = [
     country: "United States",
     stars: 1,
     score: 90,
-    review: false,
+    review: true,
   },
   {
     name: "Elske",
@@ -53,7 +53,7 @@ const RESTAURANTS = [
     country: "United States",
     stars: 1,
     score: 83,
-    review: false,
+    review: true,
   },
   {
     name: "Valhalla",
@@ -62,7 +62,7 @@ const RESTAURANTS = [
     country: "United States",
     stars: 0,
     score: 95,
-    review: false,
+    review: true,
   },
   {
     name: "Jua",
@@ -89,6 +89,6 @@ const RESTAURANTS = [
     country: "United States",
     stars: 1,
     score: 85,
-    review: false,
+    review: true,
   },
 ];
