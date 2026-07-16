@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeremy Song – Michelin Star Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Dynamic touches (delete any block you don't like) */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .reveal {
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: var(--d, 0s);
+    }
+    .signoff { font-style: italic; letter-spacing: 0.04em; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { animation: none; opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+
+  <div class="container no-background">
+    <h1>About Me</h1>
+    <p>Hi! I’m Jeremy Song, a student at Northwestern University in Evanston, Illinois. My journey into the world of fine dining began in July 2021, when I visited Kochi, a Michelin-starred Korean restaurant in New York City. At the time, I don't think I fully appreciated the creativity and storytelling behind the meal ~ but it left enough of an impression to stick with me.</p>
+    <p>Three years later, in July 2024, I gave fine dining another try at Jua, another Korean spot. This time, it all clicked.</p>
+    <p>I'm not a chef or critic, just someone who appreciates food.</p>
+    <p class="signoff">Enjoy.</p>
+  </div>
+
+  <script>
+    // staggered reveal: heading first, then each paragraph
+    document.querySelectorAll('.container h1, .container p').forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.setProperty('--d', (i * 0.12) + 's');
+    });
+  </script>
+</body>
+</html>

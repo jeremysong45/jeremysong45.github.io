@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michelin Star Blog – Restaurant List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Restaurant List page: no white box, condensed, left-aligned */
+    .container {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      max-width: 680px;
+      margin: 0;
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .container > p { font-size: 0.95rem; line-height: 1.5; }
+    .country h2 { font-size: 1rem; margin-top: 1.5rem; }
+
+    /* fixed, shared column widths so every country table aligns to the
+       same grid (otherwise each table sizes itself independently) */
+    table {
+      width: 500px;
+      max-width: 100%;
+      table-layout: fixed;
+      margin-bottom: 1.25rem;
+    }
+    td {
+      padding: 0.45rem 1rem 0.45rem 0;
+      font-size: 0.9rem;
+      text-align: left;
+      word-wrap: break-word;
+    }
+    td:nth-child(1) { width: 150px; }  /* city  */
+    td:nth-child(2) { width: 190px; }  /* name  */
+    td:nth-child(3) { width: 50px;  }  /* star  */
+    td:nth-child(4) { width: 110px; }  /* score */
+
+    /* lets 2- and 3-star restaurants show multiple stars in a row */
+    .star-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 2px;
+    }
+    .star-row .star-img { display: inline-block; margin: 0; }
+    .no-results {
+      color: #777;
+      font-style: italic;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+
+  <div class="container">
+    <h1>Restaurants Visited</h1>
+    <p>
+      This is the list of all Michelin starred/fine dining restaurants I’ve visited.
+      Highlighted rows link to my reviews. Based on
+      <a href="https://guide.michelin.com/en/restaurants" target="_blank" rel="noopener">Michelin’s official site</a>.
+    </p>
+    <p id="updated-line"></p>
+
+    <div id="list"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    /* ==========================================================
+       This page renders itself from the RESTAURANTS list in
+       data.js. You should never need to edit the HTML above
+       to add a restaurant — just edit data.js.
+       ========================================================== */
+    const listEl = document.getElementById("list");
+
+    // "7 restaurants · Updated May 2025" — counts itself
+    document.getElementById("updated-line").textContent =
+      `~ ${RESTAURANTS.length} restaurants · Updated ${LAST_UPDATED}`;
+
+    function starsCell(r) {
+      if (r.stars > 0) {
+        const one = `<img src="images/michelinstar.png" alt="" class="star-img">`;
+        return `<span class="star-row" role="img" aria-label="${r.stars} Michelin Star${r.stars > 1 ? "s" : ""}">${one.repeat(r.stars)}</span>`;
+      }
+      return `<span class="star-placeholder">&nbsp;</span>`;
+    }
+
+    function reviewCell(r) {
+      return r.review
+        ? `<a href="${r.review}">${r.score} Review</a>`
+        : `${r.score ?? ""}`;
+    }
+
+    function render(filter = "") {
+      const q = filter.trim().toLowerCase();
+      const matches = RESTAURANTS.filter(r =>
+        !q ||
+        r.name.toLowerCase().includes(q) ||
+        r.city.toLowerCase().includes(q) ||
+        r.country.toLowerCase().includes(q)
+      );
+
+      if (!matches.length) {
+        listEl.innerHTML = `<p class="no-results">No restaurants match “${filter}”.</p>`;
+        return;
+      }
+
+      // group by country, countries alphabetical
+      const groups = {};
+      matches.forEach(r => (groups[r.country] = groups[r.country] || []).push(r));
+
+      listEl.innerHTML = Object.keys(groups).sort().map(country => {
+        const rows = groups[country]
+          .sort((a, b) =>
+            a.city.localeCompare(b.city) || a.name.localeCompare(b.name))
+          .map(r => `
+            <tr class="${r.review ? "visited" : ""}">
+              <td>${r.city}</td>
+              <td>${r.name}</td>
+              <td>${starsCell(r)}</td>
+              <td>${reviewCell(r)}</td>
+            </tr>`).join("");
+
+        return `
+          <div class="country">
+            <h2>${country} (${groups[country].length})</h2>
+            <table>${rows}</table>
+          </div>`;
+      }).join("");
+    }
+
+    render();
+  </script>
+</body>
+</html>
