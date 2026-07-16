@@ -115,34 +115,53 @@ tr.visited {
   align-items: center;
 }
 .dropdown-content {
-  display: none;
   position: absolute;
   top: 100%;
-  left: 0;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  left: 50%;
   z-index: 10;
-  min-width: 160px;
-  padding: 0.5rem 0;
-  transition: opacity 0.15s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 150px;
+  padding: 0.4rem 0;
+  /* start hidden, nudged up — fades + slides down on open */
   opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -8px);
   pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.25s;
 }
 .dropdown-content a {
   display: block;
-  padding: 0.5rem 1rem;
-  color: black;
+  padding: 0.3rem 0.75rem;
+  color: #000;
   text-decoration: none;
   white-space: nowrap;
+  transition: transform 0.18s ease;
 }
-.dropdown-content a:hover {
-  background-color: #f0f0f0;
+.dropdown-content a:hover,
+.dropdown-content a.active {
+  color: #000;
+  text-decoration: underline;
+  transform: translateY(-1px);
 }
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
+/* Show dropdown on hover / keyboard focus */
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
   opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
   pointer-events: auto;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dropdown-content { transition: opacity 0.15s ease, visibility 0s linear 0.15s; transform: translate(-50%, 0); }
+  .dropdown:hover .dropdown-content,
+  .dropdown:focus-within .dropdown-content { transform: translate(-50%, 0); }
+  .dropdown-content a:hover, .dropdown-content a.active { transform: none; }
 }
 /* IMAGES */
 .review-img {
@@ -187,4 +206,74 @@ tr.visited {
 .image-hover-box:hover .caption {
   transform: translateY(0%);
   opacity: 1;
+}
+
+/* ===== THEME (light default + dark) ===== */
+/* smooth fade between themes */
+body {
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* moon / sun toggle button, fixed in the top-right corner */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: #222;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  transition: background 0.2s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s ease;
+}
+.theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.12);
+  transform: rotate(-25deg);
+}
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* --- dark theme overrides --- */
+:root[data-theme="dark"] body {
+  background-color: #14161a;
+  color: #e7e7ec;
+}
+:root[data-theme="dark"] a { color: #7cc0ff; }
+:root[data-theme="dark"] .nav-link { color: #e7e7ec; }
+:root[data-theme="dark"] .dropdown-content a,
+:root[data-theme="dark"] .dropdown-content a:hover,
+:root[data-theme="dark"] .dropdown-content a.active { color: #e7e7ec; }
+:root[data-theme="dark"] td { border-bottom-color: #2c2f36; }
+:root[data-theme="dark"] .country h2 { border-bottom-color: #3a3d45; }
+:root[data-theme="dark"] tr.visited { background-color: #222c42; }
+:root[data-theme="dark"] .theme-toggle {
+  background: rgba(255, 255, 255, 0.10);
+  color: #f0f0f0;
+}
+:root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.18); }
+
+/* review-page muted text + photo placeholders in dark mode */
+:root[data-theme="dark"] .review-meta { color: #a9a9b3; }
+:root[data-theme="dark"] .review-meta .score { color: #f0f0f0; }
+:root[data-theme="dark"] .review-date,
+:root[data-theme="dark"] .no-results,
+:root[data-theme="dark"] .photos-empty,
+:root[data-theme="dark"] .gallery figcaption { color: #9a9aa4; }
+:root[data-theme="dark"] .gallery img { background: #23252b; }
+
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none; }
+  .theme-toggle:hover { transform: none; }
 }

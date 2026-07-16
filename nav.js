@@ -11,6 +11,18 @@
    once — and every page updates automatically.
    ============================================================ */
  
+/* Set the saved / system-preferred color scheme ASAP, before the
+   page paints, so there's no flash of the wrong theme. */
+(function initTheme() {
+  try {
+    const saved = localStorage.getItem("theme");
+    const dark = saved
+      ? saved === "dark"
+      : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (dark) document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) {}
+})();
+
 const NAV_LINKS = [
   { href: "restaurants.html", label: "Restaurant List" },
   {
@@ -76,4 +88,35 @@ const NAV_LINKS = [
  
   // Insert the navbar at the very top of the page
   document.body.prepend(nav);
+})();
+
+/* ============================================================
+   Moon / sun dark-mode toggle — added to every page.
+   Moon shows in light mode (click to go dark); sun shows in
+   dark mode (click to go light). Choice is remembered.
+   ============================================================ */
+(function buildThemeToggle() {
+  const MOON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>';
+
+  const btn = document.createElement("button");
+  btn.className = "theme-toggle";
+  btn.type = "button";
+
+  const isDark = () =>
+    document.documentElement.getAttribute("data-theme") === "dark";
+
+  function apply(dark) {
+    if (dark) document.documentElement.setAttribute("data-theme", "dark");
+    else document.documentElement.removeAttribute("data-theme");
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    btn.innerHTML = dark ? SUN : MOON;
+    const label = dark ? "Switch to light mode" : "Switch to dark mode";
+    btn.setAttribute("aria-label", label);
+    btn.setAttribute("title", label);
+  }
+
+  apply(isDark());
+  btn.addEventListener("click", () => apply(!isDark()));
+  document.body.appendChild(btn);
 })();
