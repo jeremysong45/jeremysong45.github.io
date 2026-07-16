@@ -25,14 +25,7 @@
 
 const NAV_LINKS = [
   { href: "restaurants.html", label: "Restaurant List" },
-  {
-    label: "About",
-    href: "index.html",
-    dropdown: [
-      { href: "index.html",  label: "About Me" },
-      { href: "rating.html", label: "Rating System" },
-    ],
-  },
+  { href: "index.html", label: "About Me" },
 ];
  
 (function buildNav() {
@@ -119,4 +112,39 @@ const NAV_LINKS = [
   apply(isDark());
   btn.addEventListener("click", () => apply(!isDark()));
   document.body.appendChild(btn);
+})();
+
+/* ============================================================
+   Contact icons (email + LinkedIn), top-right on every page.
+   Edit EMAIL and LINKEDIN below with your details.
+   ============================================================ */
+(function buildSocialLinks() {
+  const EMAIL = "jeremysong2027@u.northwestern.edu";       // <-- your email
+  const LINKEDIN = "https://www.linkedin.com/in/jeremysong1/";  // <-- your LinkedIn URL
+
+  const MAIL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6 9-6"/></svg>';
+  const LINKEDIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 1 0 -4 0"/><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z"/></svg>';
+
+  const wrap = document.createElement("div");
+  wrap.className = "social-links";
+
+  const mail = document.createElement("a");
+  mail.className = "social-link";
+  mail.href = "mailto:" + EMAIL;
+  mail.innerHTML = MAIL_ICON;
+  mail.setAttribute("aria-label", "Email me");
+  mail.setAttribute("title", "Email me");
+
+  const linkedin = document.createElement("a");
+  linkedin.className = "social-link";
+  linkedin.href = LINKEDIN;
+  linkedin.target = "_blank";
+  linkedin.rel = "noopener";
+  linkedin.innerHTML = LINKEDIN_ICON;
+  linkedin.setAttribute("aria-label", "LinkedIn");
+  linkedin.setAttribute("title", "LinkedIn");
+
+  wrap.appendChild(mail);
+  wrap.appendChild(linkedin);
+  document.body.appendChild(wrap);
 })();

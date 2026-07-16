@@ -21,8 +21,73 @@
       animation-delay: var(--d, 0s);
     }
     .signoff { font-style: italic; letter-spacing: 0.04em; }
+
+    /* typewriter caret that keeps blinking at the end of the name */
+    .caret {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      margin-left: 4px;
+      background: currentColor;
+      vertical-align: -0.15em;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    /* shimmering warm gradient on the typed name (caret stays solid,
+       since only the text span is clipped to the gradient) */
+    #greeting-text {
+      background: linear-gradient(100deg, #1e5fd4 0%, #5aa0ff 45%, #1e5fd4 90%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: shimmer 7s linear infinite;
+    }
+    @keyframes shimmer {
+      to { background-position: 220% center; }
+    }
+
+    /* soft, slowly drifting ambient glow behind the page */
+    body {
+      position: relative;   /* stacking context for the glow layer below */
+      z-index: 0;
+      background-image:
+        radial-gradient(38rem 38rem at 15% 18%, rgba(30, 95, 212, 0.11), transparent 60%),
+        radial-gradient(34rem 34rem at 85% 82%, rgba(90, 160, 255, 0.13), transparent 60%);
+      background-size: 200% 200%, 200% 200%;
+      background-attachment: fixed;
+      background-position: 10% 15%, 90% 85%;
+      /* keep the theme fade AND ease the glows smoothly to new spots */
+      transition: background-color 0.35s ease, color 0.35s ease,
+        background-position 8s ease-in-out;
+    }
+
+    /* soft blue light that follows the cursor (sits behind the text) */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;              /* above the page background... */
+      pointer-events: none;
+      background: radial-gradient(18rem 18rem at var(--mx, 50%) var(--my, 40%),
+        rgba(60, 130, 255, 0.30), rgba(60, 130, 255, 0.10) 40%, transparent 62%);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    body.cursor-active::after { opacity: 1; }
+    /* ...and the text content sits above the glow */
+    .container { position: relative; z-index: 1; }
+
     @media (prefers-reduced-motion: reduce) {
       .reveal { animation: none; opacity: 1; }
+      .caret { animation: none; }
+      #greeting-text { animation: none; }
+      body { animation: none; }
     }
   </style>
 </head>
@@ -30,17 +95,82 @@
   <script src="nav.js"></script>
 
   <div class="container no-background">
-    <h1>About Me</h1>
-    <p>Hi! I’m a senior at Northwestern University double majoring in Data Science and Statistics, interested in business strategy, operations, and technology. This website is a passion project.</p>
-    <p class="signoff">Hope you enjoy!</p>
+    <h1 class="greeting" aria-label="Hey, I’m Jeremy"><span id="greeting-text" aria-hidden="true"></span><span class="caret" aria-hidden="true"></span></h1>
+    <p>I’m a senior at Northwestern University studying Data Science and Statistics, interested in business strategy, operations, and technology. More specifically, I’m fascinated by how data intersects with the hospitality industry and exploring how restaurants can leverage data to improve service and operations, while still maintaining guest satisfaction.</p>
   </div>
 
   <script>
-    // staggered reveal: heading first, then each paragraph
-    document.querySelectorAll('.container h1, .container p').forEach((el, i) => {
-      el.classList.add('reveal');
-      el.style.setProperty('--d', (i * 0.12) + 's');
-    });
+    // Type the name out, leave the caret blinking, then fade the
+    // paragraphs in once the name has finished typing.
+    (function aboutIntro() {
+      const h1 = document.querySelector('.greeting');
+      const target = document.getElementById('greeting-text');
+      const text = h1 ? h1.getAttribute('aria-label') : '';
+      const paragraphs = document.querySelectorAll('.container p');
+      const reduce = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const perChar = 0.085;                  // seconds per character
+      const typeDuration = text.length * perChar;
+
+      // paragraphs stay hidden, then fade in after the name finishes
+      paragraphs.forEach((el, i) => {
+        el.classList.add('reveal');
+        el.style.setProperty('--d', (typeDuration + 0.2 + i * 0.15) + 's');
+      });
+
+      if (!target) return;
+      if (reduce) { target.textContent = text; return; }  // no animation
+
+      let i = 0;
+      (function step() {
+        target.textContent = text.slice(0, i);
+        if (i < text.length) {
+          i += 1;
+          setTimeout(step, perChar * 1000);
+        }
+      })();
+    })();
+
+    // Gently wander the two background glows to random spots. The CSS
+    // transition on background-position eases each move smoothly.
+    (function ambientDrift() {
+      const reduce = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+      const rnd = (min, max) => min + Math.random() * (max - min);
+      function move() {
+        document.body.style.backgroundPosition =
+          `${rnd(0, 100)}% ${rnd(0, 100)}%, ${rnd(0, 100)}% ${rnd(0, 100)}%`;
+      }
+      move();
+      setInterval(move, 8000);
+    })();
+
+    // Blue light that trails the cursor. Guard relaxed and glow always-on
+    // while we confirm it renders; will be toned down once it's visible.
+    (function cursorGlow() {
+      const reduce = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+
+      let tx = window.innerWidth / 2, ty = window.innerHeight * 0.4;
+      let cx = tx, cy = ty, active = false;
+
+      window.addEventListener('mousemove', (e) => {
+        tx = e.clientX;
+        ty = e.clientY;
+        if (!active) { active = true; document.body.classList.add('cursor-active'); }
+      });
+
+      (function frame() {
+        cx += (tx - cx) * 0.15;
+        cy += (ty - cy) * 0.15;
+        document.body.style.setProperty('--mx', cx + 'px');
+        document.body.style.setProperty('--my', cy + 'px');
+        requestAnimationFrame(frame);
+      })();
+    })();
   </script>
 </body>
 </html>

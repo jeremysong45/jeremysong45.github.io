@@ -42,4 +42,44 @@ const REVIEWS = {
       // { src: "photos/jua/jua-01.jpg", caption: "" },
     ],
   },
+
+  central: {
+    date: "",
+    body: [
+      "Review coming soon — add your notes about Central here.",
+    ],
+    photos: [],
+  },
+
+  merito: {
+    date: "",
+    body: [
+      "Review coming soon — add your notes about Mérito here.",
+    ],
+    photos: [],
+  },
+
+  bom: {
+    date: "",
+    body: [
+      "Review coming soon — add your notes about Bōm here.",
+    ],
+    photos: [],
+  },
+
+  "kyoten-next-door": {
+    date: "",
+    body: [
+      "Review coming soon — add your notes about Kyōten Next Door here.",
+    ],
+    photos: [],
+  },
+
+  boka: {
+    date: "",
+    body: [
+      "Review coming soon — add your notes about Boka here.",
+    ],
+    photos: [],
+  },
 };

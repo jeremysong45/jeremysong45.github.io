@@ -25,7 +25,7 @@
     /* fixed, shared column widths so every country table aligns to the
        same grid (otherwise each table sizes itself independently) */
     table {
-      width: 500px;
+      width: 540px;
       max-width: 100%;
       table-layout: fixed;
       margin-bottom: 1.25rem;
@@ -36,10 +36,11 @@
       text-align: left;
       word-wrap: break-word;
     }
-    td:nth-child(1) { width: 150px; }  /* city  */
-    td:nth-child(2) { width: 190px; }  /* name  */
-    td:nth-child(3) { width: 50px;  }  /* star  */
-    td:nth-child(4) { width: 110px; }  /* score */
+    td:nth-child(1) { width: 135px; }  /* city  */
+    td:nth-child(2) { width: 175px; }  /* name  */
+    td:nth-child(3) { width: 45px;  }  /* stars */
+    td:nth-child(4) { width: 95px;  }  /* date  */
+    td:nth-child(5) { width: 90px;  }  /* score */
 
     /* lets 2- and 3-star restaurants show multiple stars in a row */
     .star-row {
@@ -61,7 +62,7 @@
   <div class="container">
     <h1>Restaurants Visited</h1>
     <p>
-      List of all fine dining restaurants I’ve visited.
+      List of fine dining restaurants I’ve visited, or restaurants I wanted to write about.
     </p>
     <p id="updated-line"></p>
 
@@ -77,9 +78,8 @@
        ========================================================== */
     const listEl = document.getElementById("list");
 
-    // "7 restaurants · Updated May 2025" — counts itself
     document.getElementById("updated-line").textContent =
-      `~ ${RESTAURANTS.length} restaurants · Updated ${LAST_UPDATED}`;
+      `Updated ${LAST_UPDATED}`;
 
     function starsCell(r) {
       if (r.stars > 0) {
@@ -89,10 +89,38 @@
       return `<span class="star-placeholder">&nbsp;</span>`;
     }
 
+    const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    // dateVisited is stored as "YYYY-MM" or "YYYY-MM-DD" (sorts correctly
+    // as a plain string); this just makes it read nicely, e.g. "Jul 2024".
+    function formatDate(iso) {
+      if (!iso) return "";
+      const [y, m, d] = iso.split("-");
+      const mon = m ? MONTHS[parseInt(m, 10) - 1] : "";
+      if (d) return `${mon} ${parseInt(d, 10)}, ${y}`;
+      if (mon) return `${mon} ${y}`;
+      return y;
+    }
+
+    function dateCell(r) {
+      return formatDate(r.dateVisited);
+    }
+
+    // sort within a city by date visited (earliest first); rows with no
+    // date (e.g. upcoming) sink to the bottom.
+    function cmpDate(a, b) {
+      const da = a.dateVisited || "";
+      const db = b.dateVisited || "";
+      if (da && db) return da < db ? -1 : da > db ? 1 : 0;
+      if (da) return -1;
+      if (db) return 1;
+      return 0;
+    }
+
     function reviewCell(r) {
-      return r.review
-        ? `<a href="review.html?r=${encodeURIComponent(r.slug)}">${r.score} Review</a>`
-        : `${r.score ?? ""}`;
+      if (r.upcoming) return `<span class="soon">Upcoming</span>`;
+      if (!r.review) return `${r.score ?? ""}`;
+      const label = (r.score != null) ? `${r.score} Review` : "Review";
+      return `<a href="review.html?r=${encodeURIComponent(r.slug)}">${label}</a>`;
     }
 
     function render(filter = "") {
@@ -116,12 +144,15 @@
       listEl.innerHTML = Object.keys(groups).sort().map(country => {
         const rows = groups[country]
           .sort((a, b) =>
-            a.city.localeCompare(b.city) || a.name.localeCompare(b.name))
+            a.city.localeCompare(b.city) ||
+            cmpDate(a, b) ||
+            a.name.localeCompare(b.name))
           .map(r => `
-            <tr class="${r.review ? "visited" : ""}">
+            <tr class="${r.upcoming ? "upcoming" : (r.review ? "visited" : "")}">
               <td>${r.city}</td>
               <td>${r.name}</td>
               <td>${starsCell(r)}</td>
+              <td>${dateCell(r)}</td>
               <td>${reviewCell(r)}</td>
             </tr>`).join("");
 
