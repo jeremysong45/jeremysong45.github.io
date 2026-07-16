@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review – Michelin Star Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Review page: same condensed, no-white-box look as the list */
+    .container {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      max-width: 760px;
+      margin: 0;
+    }
+    .back-link {
+      display: inline-block;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .review-head h1 { font-size: 1.8rem; margin-bottom: 0.35rem; }
+    .review-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    .review-meta .star-row { display: inline-flex; gap: 2px; }
+    .review-meta .star-row .star-img { width: 16px; height: auto; display: inline-block; margin: 0; }
+    .review-meta .score { font-weight: 600; color: #222; }
+    .review-date { color: #777; font-size: 0.9rem; margin: 0 0 1.5rem; }
+    .review-body p { line-height: 1.65; margin: 0 0 1rem; }
+
+    /* photo gallery — responsive grid, captions under each */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .gallery figure { margin: 0; }
+    .gallery img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+      background: #ececf2;
+    }
+    .gallery figcaption {
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 0.4rem;
+      line-height: 1.35;
+    }
+    .photos-empty, .not-found {
+      color: #777;
+      font-style: italic;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+
+  <div class="container" id="review-root"></div>
+
+  <script src="data.js"></script>
+  <script src="reviews.js"></script>
+  <script>
+    /* ==========================================================
+       Renders one review from data.js (facts) + reviews.js
+       (write-up + photos), chosen by the ?r=<slug> in the URL.
+       You should never need to edit this file to add a review —
+       just edit reviews.js and data.js.
+       ========================================================== */
+    const root = document.getElementById("review-root");
+    const params = new URLSearchParams(location.search);
+    const slug = params.get("r");
+
+    const restaurant = (typeof RESTAURANTS !== "undefined")
+      ? RESTAURANTS.find(x => x.slug === slug)
+      : null;
+    const review = (typeof REVIEWS !== "undefined") ? REVIEWS[slug] : null;
+
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    const backLink = `<a class="back-link" href="restaurants.html">&larr; Back to all restaurants</a>`;
+
+    if (!restaurant) {
+      document.title = "Review not found";
+      root.innerHTML = `${backLink}
+        <h1>Review not found</h1>
+        <p class="not-found">No restaurant matches “${esc(slug)}”. Check the link, or the slug in data.js.</p>`;
+    } else {
+      document.title = `${restaurant.name} – Michelin Star Blog`;
+
+      const stars = restaurant.stars > 0
+        ? `<span class="star-row" role="img" aria-label="${restaurant.stars} Michelin Star${restaurant.stars > 1 ? "s" : ""}">${
+            `<img src="images/michelinstar.png" alt="" class="star-img">`.repeat(restaurant.stars)}</span>`
+        : "";
+
+      const scorePart = (restaurant.score != null)
+        ? `<span class="score">${esc(restaurant.score)}</span>` : "";
+
+      const metaBits = [
+        `${esc(restaurant.city)}, ${esc(restaurant.country)}`,
+        stars,
+        scorePart,
+      ].filter(Boolean).join(`<span aria-hidden="true">·</span>`);
+
+      const datePart = (review && review.date)
+        ? `<p class="review-date">Visited ${esc(review.date)}</p>` : "";
+
+      let bodyHtml, galleryHtml;
+      if (review) {
+        bodyHtml = `<div class="review-body">${
+          (review.body || []).map(p => `<p>${esc(p)}</p>`).join("")}</div>`;
+
+        const photos = review.photos || [];
+        galleryHtml = photos.length
+          ? `<div class="gallery">${photos.map(ph => `
+              <figure>
+                <img src="${esc(ph.src)}" alt="${esc(ph.caption || restaurant.name)}" loading="lazy">
+                ${ph.caption ? `<figcaption>${esc(ph.caption)}</figcaption>` : ""}
+              </figure>`).join("")}</div>`
+          : `<p class="photos-empty">Photos coming soon.</p>`;
+      } else {
+        bodyHtml = `<p class="not-found">This review hasn’t been written yet.</p>`;
+        galleryHtml = "";
+      }
+
+      root.innerHTML = `
+        ${backLink}
+        <div class="review-head">
+          <h1>${esc(restaurant.name)}</h1>
+          <div class="review-meta">${metaBits}</div>
+        </div>
+        ${datePart}
+        ${bodyHtml}
+        ${galleryHtml}`;
+    }
+  </script>
+</body>
+</html>

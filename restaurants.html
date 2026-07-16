@@ -93,7 +93,7 @@
 
     function reviewCell(r) {
       return r.review
-        ? `<a href="${r.review}">${r.score} Review</a>`
+        ? `<a href="review.html?r=${encodeURIComponent(r.slug)}">${r.score} Review</a>`
         : `${r.score ?? ""}`;
     }
 

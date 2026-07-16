@@ -7,15 +7,22 @@
 
    Fields:
      name    — the restaurant
+     slug    — short id used for the review URL + photo folder,
+               e.g. "kochi" -> review.html?r=kochi and
+               photos/kochi/. Lowercase, no spaces.
      city    — shown in the first column
      country — rows are grouped under this heading
      stars   — Michelin stars (0, 1, 2, or 3). 0 shows the
                blank placeholder like Valhalla does now.
      score   — your rating (the number shown before "Review")
-     review  — path to your review page, e.g.
-               "reviews/kochi.html". Use null if you haven't
-               written it yet: the row still appears, but
-               without the green highlight or a link.
+     review  — true once you've written the review (adds the
+               highlight + a link to review.html?r=<slug>).
+               Leave false until then: the row still appears,
+               just without the highlight or link.
+
+   To publish a review: (1) drop photos in photos/<slug>/,
+   (2) add an entry for <slug> in reviews.js, (3) flip
+   review to true here. That's it — no HTML to edit.
    ============================================================ */
 
 const LAST_UPDATED = "May 2025";   // shown under the intro
@@ -23,58 +30,65 @@ const LAST_UPDATED = "May 2025";   // shown under the intro
 const RESTAURANTS = [
   {
     name: "Renhe Restaurant",
+    slug: "renhe",
     city: "Shanghai",
     country: "China",
     stars: 1,
     score: 17,
-    review: "reviews/renhe/renhe.html",
+    review: false,
   },
   {
     name: "Carino",
+    slug: "carino",
     city: "Chicago",
     country: "United States",
     stars: 1,
     score: 90,
-    review: "reviews/steirereck.html",
+    review: false,
   },
   {
     name: "Elske",
+    slug: "elske",
     city: "Chicago",
     country: "United States",
     stars: 1,
     score: 83,
-    review: "reviews/steirereck.html",
+    review: false,
   },
   {
     name: "Valhalla",
+    slug: "valhalla",
     city: "Chicago",
     country: "United States",
     stars: 0,
     score: 95,
-    review: "reviews/steirereck.html",
+    review: false,
   },
   {
     name: "Jua",
+    slug: "jua",
     city: "New York City",
     country: "United States",
     stars: 1,
     score: 93,
-    review: "reviews/amador.html",
+    review: true,
   },
   {
     name: "Kochi",
+    slug: "kochi",
     city: "New York City",
     country: "United States",
     stars: 1,
     score: 81,
-    review: "reviews/steirereck.html",
+    review: true,
   },
   {
     name: "Oxomoco",
+    slug: "oxomoco",
     city: "New York City",
     country: "United States",
     stars: 1,
     score: 85,
-    review: "reviews/steirereck.html",
+    review: false,
   },
 ];
